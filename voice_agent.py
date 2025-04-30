@@ -6,7 +6,8 @@ import numpy as np
 import pyaudio
 import openai
 import time
-from elevenlabs import generate, play, set_api_key
+from elevenlabs.client import ElevenLabs
+from elevenlabs import play
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -16,9 +17,7 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 eleven_labs_api_key = os.getenv("ELEVEN_LABS_API_KEY")
 eleven_labs_voice_id = os.getenv("ELEVEN_LABS_VOICE_ID")
-
-# Set up ElevenLabs API key
-set_api_key(eleven_labs_api_key)
+eleven_labs_model_id = os.getenv("ELEVEN_LABS_MODEL_ID")
 
 # Audio recording parameters
 FORMAT = pyaudio.paInt16
@@ -102,11 +101,16 @@ def get_gpt_response(text):
 
 def text_to_speech(text):
     """Convert text to speech using ElevenLabs"""
+
+    client = ElevenLabs(
+        api_key=eleven_labs_api_key,
+    )
     try:
-        audio = generate(
+        audio = client.text_to_speech.convert(
             text=text,
-            voice=eleven_labs_voice_id,
-            model="eleven_monolingual_v1"
+            voice_id=eleven_labs_voice_id,
+            model_id=eleven_labs_model_id,
+            output_format="mp3_44100_128",
         )
         play(audio)
     except Exception as e:

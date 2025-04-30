@@ -8,9 +8,10 @@ A Python-based voice agent that uses:
 ## Setup
 
 1. Clone this repository
+2. Create a virtual env using `uv venv .venv` and then activate it using `source .venv\bin\activate`
 2. Install dependencies:
    ```
-   pip install -r requirements.txt
+   uv sync
    ```
 3. Copy `.env.example` to `.env` and fill in your API keys:
    ```
